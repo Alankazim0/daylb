@@ -1,10 +1,39 @@
-- name: Upload Artifact
+name: Build-Alan-VIP
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Theos
+        run: |
+          export THEOS=/Users/runner/theos
+          rm -rf $THEOS
+          git clone --recursive https://github.com/theos/theos.git $THEOS
+          rm -rf $THEOS/sdks
+          git clone https://github.com/theos/sdks.git $THEOS/sdks
+
+      - name: Build Project
+        run: |
+          export THEOS=/Users/runner/theos
+          find . -name "Makefile" | while read -r makefile; do
+            dir=$(dirname "$makefile")
+            echo "Building in $dir..."
+            cd "$dir" && make FINALPACKAGE=1
+          done
+
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Alan-VIP-Output
-          # گەڕان لە هەموو شوێنێک بۆ فایلەکان
           path: |
-            ./packages/*.deb
-            ./**/*.dylib
-            ./.theos/obj/*.dylib
-          if-no-files-found: error # ئەگەر نەیدۆزیەوە با هەڵە بدات تا بزانین کێشەکە لە کوێیە
+            packages/*.deb
+            **/*.dylib
+          if-no-files-found: warn
