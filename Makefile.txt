@@ -1,13 +1,14 @@
+# ئەمانە بۆ ئەوەیە بزانێت بۆ چ جۆرە ئایفۆنێک دروست دەکرێت
 ARCHS = arm64 arm64e
-TARGET = iphone:clang:latest:14.0
+TARGET = iphone:clang:latest:14.5
 
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME = AlanVIP
+# لێرە ناوی تویکەکەت بنووسە
+TWEAK_NAME = DayLB_AlanVIP
 
-# لێرەدا دەبێت ناوی ئەو فایلانە بنووسیت کە کۆدیان تێدایە
-AlanVIP_FILES = Tweak.xm Downloader.mm
-AlanVIP_FRAMEWORKS = UIKit Foundation CoreGraphics
-AlanVIP_LIBRARIES = substrate
+# لێرە ناوی ئەو فایلانە بنووسە کە کۆدەکەی تێدایە (وەک Tweak.x یان Tweak.xm)
+DayLB_AlanVIP_FILES = Tweak.x
+DayLB_AlanVIP_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk
