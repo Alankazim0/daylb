@@ -1,0 +1,30 @@
+#import "Hacks.mm"
+#import "Downloader.mm"
+
+- (void)drawMenu {
+    FetchOffsets(); // دابەزاندنی ئۆفسێتەکان لەگەڵ کردنەوەی مینیوو
+
+    [menu addTitle:@"⭐ ALAN VIP MOD ⭐"];
+    [menu addLabel:@"--- Combat Mods ---"];
+    [menu addSwitch:@"Silent Aim" callback:^(BOOL v) { set.sAim = v; }];
+    [menu addSwitch:@"No Recoil" callback:^(BOOL v) { set.nRecoil = v; }];
+    [menu addSwitch:@"Instant Hit" callback:^(BOOL v) { set.iHit = v; }];
+    
+    [menu addLabel:@"--- Visual & Movement ---"];
+    [menu addSwitch:@"iPad View (110)" callback:^(BOOL v) { set.iView = v; }];
+    
+    // دوگمەی فڕینی ٣ پەنجە
+    [menu addSwitch:@"3-Finger Fly" callback:^(BOOL v) { 
+        set.flyActive = v; 
+        [menu showMessage:v ? @"Enable: Hold 3 fingers to fly" : @"Fly Disabled"];
+    }];
+
+    [menu addLabel:@"--- Protection ---"];
+    [menu addSwitch:@"Anti Report" callback:^(BOOL v) { set.aReport = v; }];
+    [menu addButton:@"Guest Reset (Safe)" callback:^{
+        Patch(idxGuestReset, "\xC0\x03\x5F\xD6", 4);
+        [menu showMessage:@"Guest Data Cleared!"];
+    }];
+    
+    [menu addFooter:@"Developed by Alan"];
+}
