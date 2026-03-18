@@ -11,22 +11,15 @@ jobs:
       - name: Setup Theos and SDKs
         run: |
           export THEOS=/Users/runner/theos
-          # سڕینەوەی هەر فۆڵدەرێکی کۆن بۆ ئەوەی هەڵە نەدات
           sudo rm -rf $THEOS
-          
-          # داگرتنی تیۆس
           git clone --recursive https://github.com/theos/theos.git $THEOS
-          
-          # داگرتنی SDKـەکان بە شێوەیەکی ڕاستەوخۆ بۆ ناو فۆڵدەرە دروستەکە
-          rm -rf $THEOS/sdks
           git clone https://github.com/theos/sdks.git $THEOS/sdks
 
       - name: Build Project
         run: |
           export THEOS=/Users/runner/theos
-          # ئەگەر فایلی پاکێجت هەیە، ئەمە جێبەجێ دەکات
-          make clean
-          make FINALPACKAGE=1
+          # لێرەدا فەرمانەکە دەڵێت: بگەڕێ بەدوای هەر شوێنێک Makefile لێیە و لەوێوە Build بکە
+          find . -name "Makefile" -exec dirname {} \; | xargs -I {} sh -c "cd {} && make FINALPACKAGE=1"
           
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -34,4 +27,5 @@ jobs:
           name: Alan-VIP-Output
           path: |
             packages/*.deb
-            .theos/obj/*.dylib
+            **/.theos/obj/*.dylib
+            **/*.dylib
