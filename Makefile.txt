@@ -4,6 +4,8 @@ TARGET = iphone:clang:latest:14.0
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = AlanVIP
+
+# لێرەدا دەبێت ناوی ئەو فایلانە بنووسیت کە کۆدیان تێدایە
 AlanVIP_FILES = Tweak.xm Downloader.mm
 AlanVIP_FRAMEWORKS = UIKit Foundation CoreGraphics
 AlanVIP_LIBRARIES = substrate
