@@ -1,0 +1,23 @@
+#import "Offsets.h"
+#import "Memory.h"
+
+struct {
+    bool sAim, nRecoil, iView, iHit, flyActive, aReport;
+} set;
+
+// ئەم فەنکشنە بەردەوام چاودێری پەنجەکان دەکات
+void UpdateHacks(int touchCount) {
+    if (set.iView) WriteFloat(idxiPadView, 110.0f);
+    if (set.nRecoil) WriteFloat(idxNoRecoil, 0.0f);
+    if (set.iHit) WriteFloat(idxInstantHit, 600000.0f);
+    
+    // --- [ 3-Finger Fly Logic ] ---
+    // ئەگەر مۆدەکە لە مینیوو داگیرسابوو (ON) و ٣ پەنجەت لێدا:
+    if (set.flyActive && touchCount == 3) {
+        WriteFloat(idxFlyMode, 0.0f); // فڕین (Gravity Off)
+    } else {
+        WriteFloat(idxFlyMode, 1.0f); // نیشتنەوە (Gravity On)
+    }
+
+    if (set.aReport) Patch(idxAntiReport, "\xC0\x03\x5F\xD6", 4);
+}
