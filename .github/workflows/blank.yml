@@ -1,12 +1,11 @@
 - name: Build Project
         run: |
           export THEOS=/Users/runner/theos
-          # گەڕان بەدوای Makefile و دەستپێکردنی Build بە شێوەیەکی سەلامەت
+          # گەڕان بەدوای Makefile و دەستپێکردنی Build
           find . -name "Makefile" | while read -r makefile; do
             dir=$(dirname "$makefile")
-            echo "---------------------------------------"
-            echo "🚀 Starting build in: $dir"
-            echo "---------------------------------------"
-            # بەکارهێنانی (cd ...) بۆ ئەوەی گۆڕانکاری شوێن تەنها لەناو ئەو کەوانەیەدا بێت
-            (cd "$dir" && make clean && make FINALPACKAGE=1)
+            echo "🚀 Building in: $dir"
+            # لێرە 'make clean'مان لابرد چونکە فۆڵدەرەکە تازەیە و پێویست ناکات
+            cd "$dir" && make FINALPACKAGE=1
+            cd -
           done
