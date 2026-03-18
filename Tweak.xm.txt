@@ -1,0 +1,17 @@
+#import "Menu.mm"
+
+%hook UIWindow
+- (void)sendEvent:(UIEvent *)event {
+    %orig;
+    if (event.type == UIEventTypeTouches) {
+        int touchCount = (int)[[event allTouches] count];
+        UpdateHacks(touchCount); 
+    }
+}
+%end
+
+%ctor {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [AlanMenu loadMenu];
+    });
+}
