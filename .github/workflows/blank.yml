@@ -1,0 +1,30 @@
+name: Build-Alan-VIP
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Theos
+        run: |
+          export THEOS=/Users/runner/theos
+          git clone --recursive https://github.com/theos/theos.git $THEOS
+          # بەکارهێنانی لینکێکی نوێتر و جێگیر بۆ SDK
+          mkdir -p $THEOS/sdks
+          curl -L https://github.com/theos/sdks/raw/master/iPhoneOS14.5.sdk.tar.xz -o $THEOS/sdks/iPhoneOS14.5.sdk.tar.xz
+          tar -xf $THEOS/sdks/iPhoneOS14.5.sdk.tar.xz -C $THEOS/sdks
+          rm $THEOS/sdks/iPhoneOS14.5.sdk.tar.xz
+
+      - name: Build Dylib
+        run: |
+          export THEOS=/Users/runner/theos
+          make FINALPACKAGE=1
+          
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Alan-Dylib-File
+          path: "packages/*.deb" # یان دەتوانیت "**/*.dylib" بەکاربهێنیت
