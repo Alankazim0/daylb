@@ -1,0 +1,20 @@
+#import "Offsets.h"
+#import <Foundation/Foundation.h>
+
+uintptr_t FinalOffsets[16]; 
+
+void FetchOffsets() {
+    // لێرە لینکی Raw ی ئۆفسێتەکان دابنێ (offsets.txt)
+    NSString *url = @"https://raw.githubusercontent.com/Alankazim0/alan-offest/refs/heads/main/offsets.json";
+    
+    NSString *data = [NSString stringWithContentsOfURL:[NSURL URLWithString:url] encoding:NSUTF8StringEncoding error:nil];
+    if (data) {
+        NSArray *list = [data componentsSeparatedByString:@","];
+        for (int i = 0; i < list.count && i < 16; i++) {
+            unsigned long long val;
+            NSScanner *scanner = [NSScanner scannerWithString:list[i]];
+            [scanner scanHexLongLong:&val];
+            FinalOffsets[i] = (uintptr_t)val;
+        }
+    }
+}
