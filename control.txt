@@ -1,0 +1,8 @@
+Package: com.alan.vip
+Name: Alan VIP Online
+Version: 1.0
+Architecture: iphoneos-arm
+Description: 15 Mods Online with 3-Finger Fly
+Maintainer: Alan
+Author: Alan
+Section: Tweaks
