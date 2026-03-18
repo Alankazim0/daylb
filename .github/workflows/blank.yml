@@ -8,18 +8,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Theos and SDKs
+      - name: Setup Theos
         run: |
+          # دیاریکردنی ڕێڕەوی تیۆس
           export THEOS=/Users/runner/theos
-          sudo rm -rf $THEOS
+          
+          # دڵنیابوون لەوەی هیچ پاشماوەیەک نەماوە
+          rm -rf $THEOS
+          
+          # تەنها کلۆنکردنی تیۆس بەبێ SDK سەرەتا
           git clone --recursive https://github.com/theos/theos.git $THEOS
+          
+          # سڕینەوەی فۆڵدەری SDK ئەگەر هەبێت و دواتر داگرتنی SDKـەکان
+          rm -rf $THEOS/sdks
           git clone https://github.com/theos/sdks.git $THEOS/sdks
 
       - name: Build Project
         run: |
           export THEOS=/Users/runner/theos
-          # لێرەدا فەرمانەکە دەڵێت: بگەڕێ بەدوای هەر شوێنێک Makefile لێیە و لەوێوە Build بکە
-          find . -name "Makefile" -exec dirname {} \; | xargs -I {} sh -c "cd {} && make FINALPACKAGE=1"
+          # گەڕان بەدوای Makefile و دەستپێکردنی Build
+          for dir in $(find . -name "Makefile" -exec dirname {} \;); do
+            echo "Building in $dir..."
+            cd $dir && make FINALPACKAGE=1 && cd -
+          done
           
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
