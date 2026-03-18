@@ -1,0 +1,32 @@
+name: Build-Alan-VIP
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Theos and SDKs
+        run: |
+          export THEOS=/Users/runner/theos
+          # داگرتنی تیۆس بە هەموو سه‌بمۆدیولەکانەوە
+          git clone --recursive https://github.com/theos/theos.git $THEOS
+          
+          # لەبری داگرتنی یەک SDK، با هەموو SDKـە فەرمییەکان ڕاستەوخۆ کلۆن بکەین
+          git clone https://github.com/theos/sdks.git $THEOS/sdks
+
+      - name: Build Dylib
+        run: |
+          export THEOS=/Users/runner/theos
+          # دڵنیابوونەوە لەوەی مەیك (Make) دەزانێت چی دەکات
+          make FINALPACKAGE=1
+          
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Alan-VIP-Dylib
+          path: |
+            packages/*.deb
+            .theos/obj/*.dylib
