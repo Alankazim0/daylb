@@ -1,11 +1,38 @@
-- name: Build Project
+name: Build-Alan-VIP
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Theos
         run: |
           export THEOS=/Users/runner/theos
-          # گەڕان بەدوای Makefile و دەستپێکردنی Build
+          rm -rf $THEOS
+          git clone --recursive https://github.com/theos/theos.git $THEOS
+          rm -rf $THEOS/sdks
+          git clone https://github.com/theos/sdks.git $THEOS/sdks
+
+      - name: Build Project
+        run: |
+          export THEOS=/Users/runner/theos
           find . -name "Makefile" | while read -r makefile; do
             dir=$(dirname "$makefile")
-            echo "🚀 Building in: $dir"
-            # لێرە 'make clean'مان لابرد چونکە فۆڵدەرەکە تازەیە و پێویست ناکات
-            cd "$dir" && make FINALPACKAGE=1
-            cd -
+            echo "Building in $dir..."
+            cd "$dir" && make FINALPACKAGE=1 && cd -
           done
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Alan-VIP-Output
+          path: |
+            packages/*.deb
+            **/.theos/obj/*.dylib
+            **/*.dylib
